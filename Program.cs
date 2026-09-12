@@ -103,6 +103,15 @@ internal class Program {
                 policy.RequireClaim("user_role", "admin"));
         });
 
+        builder.Services.AddCors(options => {
+            options.AddPolicy("Frontend", policy => {
+                policy
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
+
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment()) {
@@ -117,6 +126,8 @@ internal class Program {
         }
 
         app.UseHttpsRedirection();
+
+        app.UseCors("Frontend");
 
         app.UseAuthentication();
         app.UseAuthorization();
